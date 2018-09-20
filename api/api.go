@@ -31,14 +31,14 @@ var (
 	labels       []string
 )
 
-func main() {
-	if err := loadModel(); err != nil {
+func Main() {
+	if err := LoadModel(); err != nil {
 		log.Fatal(err)
 		return
 	}
 
 	r := httprouter.New()
-	r.POST("/recognize", recognizeHandler)
+	r.POST("/recognize", RecognizeHandler)
 	log.Fatal(http.ListenAndServe(":8080", r))
 }
 
@@ -81,7 +81,7 @@ func RecognizeHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 	// Will contain filename and extension
 	imageName := strings.Split(header.Filename, ".")
 	if err != nil {
-		responseError(w, "Could not read image", http.StatusBadRequest)
+		ResponseError(w, "Could not read image", http.StatusBadRequest)
 		return
 	}
 	defer imageFile.Close()
@@ -91,9 +91,9 @@ func RecognizeHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 
 	// ...
 	// Make tensor
-	tensor, err := makeTensorFromImage(&imageBuffer, imageName[:1][0])
+	tensor, err := MakeTensorFromImage(&imageBuffer, imageName[:1][0])
 	if err != nil {
-		responseError(w, "Invalid image", http.StatusBadRequest)
+		ResponseError(w, "Invalid image", http.StatusBadRequest)
 		return
 	}
 
@@ -107,14 +107,14 @@ func RecognizeHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 		},
 		nil)
 	if err != nil {
-		responseError(w, "Could not run inference", http.StatusInternalServerError)
+		ResponseError(w, "Could not run inference", http.StatusInternalServerError)
 		return
 	}
 
 	// Return best labels
-	responseJSON(w, ClassifyResult{
+	ResponseJSON(w, ClassifyResult{
 		Filename: header.Filename,
-		Labels:   findBestLabels(output[0].Value().([][]float32)[0]),
+		Labels:   FindBestLabels(output[0].Value().([][]float32)[0]),
 	})
 }
 

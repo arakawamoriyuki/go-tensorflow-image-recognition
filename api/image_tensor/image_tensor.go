@@ -12,7 +12,7 @@ func MakeTensorFromImage(imageBuffer *bytes.Buffer, imageFormat string) (*tf.Ten
 	if err != nil {
 		return nil, err
 	}
-	graph, input, output, err := makeTransformImageGraph(imageFormat)
+	graph, input, output, err := MakeTransformImageGraph(imageFormat)
 	if err != nil {
 		return nil, err
 	}
