@@ -1,4 +1,4 @@
-package main
+package tf_image_recognition
 
 import (
 	"bytes"
@@ -7,7 +7,7 @@ import (
 	"github.com/tensorflow/tensorflow/tensorflow/go/op"
 )
 
-func makeTensorFromImage(imageBuffer *bytes.Buffer, imageFormat string) (*tf.Tensor, error) {
+func MakeTensorFromImage(imageBuffer *bytes.Buffer, imageFormat string) (*tf.Tensor, error) {
 	tensor, err := tf.NewTensor(imageBuffer.String())
 	if err != nil {
 		return nil, err
@@ -32,7 +32,7 @@ func makeTensorFromImage(imageBuffer *bytes.Buffer, imageFormat string) (*tf.Ten
 }
 
 // Creates a graph to decode, rezise and normalize an image
-func makeTransformImageGraph(imageFormat string) (graph *tf.Graph, input, output tf.Output, err error) {
+func MakeTransformImageGraph(imageFormat string) (graph *tf.Graph, input, output tf.Output, err error) {
 	const (
 		H, W  = 224, 224
 		Mean  = float32(117)

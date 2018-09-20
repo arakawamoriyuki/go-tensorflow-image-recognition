@@ -1,4 +1,4 @@
-package main
+package tf_image_recognition
 
 import (
 	"bufio"
@@ -42,7 +42,7 @@ func main() {
 	log.Fatal(http.ListenAndServe(":8080", r))
 }
 
-func loadModel() error {
+func LoadModel() error {
 	// Load inception model
 	model, err := ioutil.ReadFile("/model/tensorflow_inception_graph.pb")
 	if err != nil {
@@ -75,7 +75,7 @@ func loadModel() error {
 	return nil
 }
 
-func recognizeHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func RecognizeHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	// Read image
 	imageFile, header, err := r.FormFile("image")
 	// Will contain filename and extension
@@ -124,7 +124,7 @@ func (a ByProbability) Len() int           { return len(a) }
 func (a ByProbability) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a ByProbability) Less(i, j int) bool { return a[i].Probability > a[j].Probability }
 
-func findBestLabels(probabilities []float32) []LabelResult {
+func FindBestLabels(probabilities []float32) []LabelResult {
 	// Make a list of label/probability pairs
 	var resultLabels []LabelResult
 	for i, p := range probabilities {
